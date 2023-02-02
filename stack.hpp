@@ -3,11 +3,12 @@
 
 # include <memory>
 # include <vector>
+# include <stack>
 
 namespace ft
 {
-	template <typename T, class container = vector<T>>
-	class	Stack
+	template <typename T, class Container = std::vector<T>>
+	class	stack
 	{
 	private:
 		T	*data;
@@ -18,6 +19,7 @@ namespace ft
 		Stack() : size(0), capacity(10) {
 		data = 
 	}
+	};
 }
 
 #endif
