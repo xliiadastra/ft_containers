@@ -6,7 +6,7 @@ namespace ft
 	template <typename T1, typename T2>
 	class	Pair
 	{
-	private:
+	public:
 		typedef T1 first_type;
 		typedef T2 second_type;
 
