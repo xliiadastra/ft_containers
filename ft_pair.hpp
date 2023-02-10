@@ -15,7 +15,7 @@ class	Pair
 };
 
 template <typename T1, typename T2>
-inline bool	operator==(const pair<T1, T2>& x, const pair<T1, T2>& y)
+inline bool	operator==(const pair<T1, T2>& x, const pair<T1, T2>& y) // what is inline?
 {
 	return ((x.first == y.first) && (x.second == y.second));
 }
