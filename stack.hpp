@@ -8,11 +8,11 @@
 namespace ft
 {
 	template <typename T, class _Container = std::vector<T> >
-	class	Stack
+	class	stack
 	{
 	private:
-		friend bool operator==(const Stack&, const Stack&);
-		friend bool operator<(const Stack&, const Stack&);
+		friend bool operator==(const stack&, const stack&);
+		friend bool operator<(const stack&, const stack&);
 	public:
 		typedef typename _Container::value_type	value_type;
 		typedef typename _Container::size_type	size_type;
@@ -23,8 +23,8 @@ namespace ft
 	protected:
 		_Container	_M_c; // why _M_c?
 	public:
-		Stack() : _M_c() {}
-		explicit	Stack(const _Container& __s) : _M_c(__s) {}
+		stack() : _M_c() {}
+		explicit	stack(const _Container& __s) : _M_c(__s) {}
 
 		bool			empty() const { return _M_c.empty(); }
 		size_type		size() const { return _M_c.size(); }
@@ -35,33 +35,33 @@ namespace ft
 	};
 
 	template <typename T, class _Con>
-	bool operator==(const Stack<T, _Con>& __x, const Stack<T, _Con>& __y) {
+	bool operator==(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return (__x._M_c == __y._M_c);
 	}
 
 	template <typename T, class _Con>
-	bool operator<(const Stack<T, _Con>& __x, const Stack<T, _Con>& __y) {
+	bool operator<(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return (__x._M_c < __y._M_c);
 	}
 
 	template <typename T, class _Con>
-	bool operator!=(const Stack<T, _Con>& __x, const Stack<T, _Con>& __y) {
-		return (__x._M_c != __y._M_c);
+	bool operator!=(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
+		return !(__x._M_c == __y._M_c);
 	}
 	
 	template <typename T, class _Con>
-	bool operator>(const Stack<T, _Con>& __x, const Stack<T, _Con>& __y) {
+	bool operator>(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return (__x._M_c > __y._M_c);
 	}
 	
 	template <typename T, class _Con>
-	bool operator<=(const Stack<T, _Con>& __x, const Stack<T, _Con>& __y) {
-		return (__x._M_c <= __y._M_c);
+	bool operator<=(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
+		return !(__x._M_c > __y._M_c);
 	}
 
 	template <typename T, class _Con>
-	bool operator>=(const Stack<T, _Con>& __x, const Stack<T, _Con>& __y) {
-		return (__x._M_c >= __y._M_c);
+	bool operator>=(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
+		return !(__x._M_c < __y._M_c);
 	}
 }
 #endif
