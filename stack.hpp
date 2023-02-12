@@ -7,8 +7,8 @@
 
 namespace ft
 {
-	template <typename T, class _Container = std::vector<T> >
-	class	stack
+	template <typename T, typename _Container = std::vector<T> >
+	class stack
 	{
 	private:
 		friend bool operator==(const stack&, const stack&);
@@ -34,32 +34,32 @@ namespace ft
 		void			pop() { _M_c.pop_back(); }
 	};
 
-	template <typename T, class _Con>
+	template <typename T, typename _Con>
 	bool operator==(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return (__x._M_c == __y._M_c);
 	}
 
-	template <typename T, class _Con>
+	template <typename T, typename _Con>
 	bool operator<(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return (__x._M_c < __y._M_c);
 	}
 
-	template <typename T, class _Con>
+	template <typename T, typename _Con>
 	bool operator!=(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return !(__x._M_c == __y._M_c);
 	}
 	
-	template <typename T, class _Con>
+	template <typename T, typename _Con>
 	bool operator>(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return (__x._M_c > __y._M_c);
 	}
 	
-	template <typename T, class _Con>
+	template <typename T, typename _Con>
 	bool operator<=(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return !(__x._M_c > __y._M_c);
 	}
 
-	template <typename T, class _Con>
+	template <typename T, typename _Con>
 	bool operator>=(const stack<T, _Con>& __x, const stack<T, _Con>& __y) {
 		return !(__x._M_c < __y._M_c);
 	}

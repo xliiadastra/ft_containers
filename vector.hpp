@@ -6,7 +6,7 @@
 namespace fd {
 
 template <typename T, typename Alloc = std::allocator<T> >
-class	Vector_base // 안전성을 위해서 만든다?
+class Vector_base // 안전성을 위해서 만든다?
 {
 public:
 	typedef Alloc allocator_type;
@@ -17,10 +17,15 @@ public:
 		finish = start;
 		end_of_storage = start + n;
 	}
+
+	~Vector_base() { deallocate(start, end_of_storage -  start ); }
 };
 
 template <typename T, typename Alloc = std::allocator<T> >
-class	vector {
+class vector : protected Vector_base<T, Alloc>
+{
+private:
+
 public:
 	typedef T					value_type;
 	typedef value_type&			reference;
