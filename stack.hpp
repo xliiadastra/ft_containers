@@ -21,7 +21,7 @@ namespace ft
 		typedef typename _Container::reference			reference;
 		typedef typename _Container::const_reference	const_reference;
 	protected:
-		_Container	_M_c; // why _M_c?
+		_Container	_M_c; // why _M_c? -> M : Member, c : container
 	public:
 		stack() : _M_c() {}
 		explicit	stack(const _Container& __s) : _M_c(__s) {}
