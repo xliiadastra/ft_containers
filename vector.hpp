@@ -15,19 +15,19 @@ class Vector_alloc_base // 안전성을 위해서 만든다? -> RAII
 {
 public:
 	typedef Alloc allocator_type;
-	allocator_type get_allocator() const { return _M_data_allocator; }
+	allocator_type get_allocator() const { return data_allocator; }
 
-	Vector_alloc_base(const allocator_type &__a)
-		: _M_data_allocator(__a), start(0), finish(0), end_of_storage(0) {}
+	Vector_alloc_base(const allocator_type& __a)
+		: data_allocator(__a), start(0), finish(0), end_of_storage(0) {}
 
 protected:
-	allocator_type _M_data_allocator;
+	allocator_type data_allocator;
 	T *start;
 	T *finish;
 	T *end_of_storage;
 
-	T *allocate(size_t n) { return data_allocator.allocate(n); }
-	void deallocate(T *p, size_t n){ if (p) data_allocator.deallocate(p, n); }
+	T*		allocate(size_t n) { return data_allocator.allocate(n); }
+	void	deallocate(T *p, size_t n){ if (p) data_allocator.deallocate(p, n); }
 };
 
 template <typename T, typename Alloc = std::allocator<T>>
@@ -36,7 +36,7 @@ struct Vector_base : public Vector_alloc_base<T, Alloc>
 	typedef Vector_alloc_base<T, Alloc> Base;
 	typedef typename Base::allocator_type allocator_type;
 
-	Vector_base(const allocator_type &a) : Base(a) {}
+	Vector_base(const allocator_type& a) : Base(a) {}
 	Vector_base(size_t n, const allocator_type &a) : Base(a) {
 		start = allocate(n);
 		finish = start;
@@ -71,11 +71,11 @@ public:
 	typedef reverse_iterator<iterator> reverse_iterator;
 
 protected:
-	using _Base::_M_allocate;
-	using _Base::_M_deallocate;
-	using _Base::_M_end_of_storage;
-	using _Base::_M_finish;
-	using _Base::_M_start;
+	using _Base::allocate;
+	using _Base::deallocate;
+	using _Base::end_of_storage;
+	using _Base::finish;
+	using _Base::start;
 
 protected:
 	void _M_insert_aux(iterator __position, const T &__x);
@@ -83,8 +83,8 @@ protected:
 
 public:
 	/*
-	*	iterator
-	*/
+	 *	iterator
+	 */
 	iterator begin() { return iterator(_M_start); }
 	const_iterator begin() const { return const_iterator(_M_start); }
 	iterator end() { return iterator(_M_finish); }
@@ -99,8 +99,8 @@ public:
 	const_iterator rend() const { return const_reverse_iterator(begin()); }
 
 	/*
-	*	capacity
-	*/
+	 *	capacity
+	 */
 	size_type size() const { return size_type(end() - begin()); }
 	size_type max_size() const { return size_type(-1) / sizeof(T); }
 	size_type capacity() const
@@ -110,8 +110,8 @@ public:
 	bool empty() const { return begin() == end(); }
 
 	/*
-	*	element accessor
-	*/	
+	 *	element accessor
+	 */	
 	reference operator[](size_type __n) { return *(begin() + __n); }
 	const_reference operator[](size_type __n) const { return *(begin() + __n); }
 
@@ -121,25 +121,39 @@ public:
 			throw std::out_of_range("vector");
 	}
 
-	reference at(size_type __n)
-	{
+	reference at(size_type __n) {
 		_M_range_check(__n);
 		return (*this)[__n];
 	}
-	const_reference at(size_type __n) const
-	{
+
+	const_reference at(size_type __n) const {
 		_M_range_check(__n);
 		return (*this)[__n];
 	}
 
 	/*
-	*	Constructor
-	*/
+	 *	Constructor
+	 */
+	explicit vector(const allocator_type& __a = allocator_type()) : _Base(__a) {
+	}
+
+	explicit vector(size_type __n) : _Base(__n, allocator_type()) {
+		finish = uninitialized_fill_n(start, __n, T());
+	}
+
+	vector(size_type __n, const T& __value, const allocator_type& __a = allocator_type())
+	: _Base(__n, __a) {
+		finish = uninitaialized_fill_n(start, __n, __value);
+	}
+
+	vector(const vector& __x) : _Base(__x.size(), __x.get_allocator()) {
+		finish = uninitialized_copy(__x.begin(), __x.end(), start);
+	}
 
 	/*
-	*	Destructor
-	*/
-
+	 *	Destructor
+	 */
+	~vector() { destroy(start, finish); }
 };
 
 } // namespace fd
