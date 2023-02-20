@@ -33,14 +33,18 @@ public:
     template <typename _Iter>
     reverse_iterator(const reverse_iterator<_Iter>& _x) : _M_current(_x.base()) {}
 
-    iterator_type   base() const { return _M_current; }
+    iterator_type   base() const {
+        return _M_current;
+    }
 
     reference   operator*() const {
         _Iterator _tmp = _M_current;
         return *--_tmp;
     }
 
-    pointer operator->() const { return &(operator*()); }
+    pointer operator->() const {
+        return &(operator*());
+    }
 
     reverse_iterator&   operator++() {
         --_M_current;
@@ -87,6 +91,47 @@ public:
     }
 };
 
+template <typename _Iterator> // 암시적 형변환을 위해서 밖에다 operator 를 선언.
+inline bool operator==(const reverse_iterator<_Iterator>& _x,
+                       const reverse_iterator<_Iterator>& _y)
+{ return _x.base() == _y.base(); }
+
+template <typename _Iterator>
+inline bool operator<(const reverse_iterator<_Iterator>& _x,
+                      const reverse_iterator<_Iterator>& _y)
+{ return _y.base() < _x.base(); }
+
+template <typename _Iterator>
+inline bool operator!=(const reverse_iterator<_Iterator>& _x,
+                       const reverse_iterator<_Iterator>& _y)
+{ return !(_x == _y); }
+
+template <typename _Iterator>
+inline bool operator>(const reverse_iterator<_Iterator>& _x,
+                      const reverse_iterator<_Iterator>& _y)
+{ return _y < _x; }
+
+template <typename _Iterator>
+inline bool operator<=(const reverse_iterator<_Iterator>& _x,
+                       const reverse_iterator<_Iterator>& _y)
+{ return !(_y < _x); }
+
+template <typename _Iterator>
+inline bool operator>=(const reverse_iterator<_Iterator>& _x,
+                       const reverse_iterator<_Iterator>& _y)
+{ return !(_x < _y); }
+
+template <typename _Iterator>
+inline typename reverse_iterator<_Iterator>::difference_type
+operator-(const reverse_iterator<_Iterator>& _x,
+          const reverse_iterator<_Iterator>& _y)
+{ return _y.base() - _x.base(); }
+
+template <typename _Iterator>
+inline reverse_iterator<_Iterator>
+operator+(typename reverse_iterator<_Iterator>::difference_type _n,
+          const reverse_iterator<_Iterator>& _x)
+{ return reverse_iterator<_Iterator>(_x.base() - _n); }
 
 template <typename _Iter>
 struct iterator_traits {
@@ -137,7 +182,7 @@ protected:
     _Iterator _M_current; // Member
 
 public:
-    typedef typename iterator_traits<_Iterator>::differenece_thhype difference_type;
+    typedef typename iterator_traits<_Iterator>::differenece_type   difference_type;
     typedef typename iterator_traits<_Iterator>::reference          reference;
     typedef typename iterator_traits<_Iterator>::pointer            pointer;
 
