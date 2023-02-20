@@ -2,12 +2,13 @@
 # define FT_STACK_HPP
 
 # include <memory>
-# include <vector>
-# include <stack>
+//# include <vector>
+//# include <stack>
+# include "vector.hpp"
 
 namespace ft
 {
-	template <typename T, typename _Container = std::vector<T> >
+	template <typename T, typename _Container = ft::vector<T> >
 	class stack
 	{
 	private:
