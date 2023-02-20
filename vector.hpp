@@ -59,8 +59,8 @@ public:
 	typedef const value_type &const_reference;
 	typedef value_type *pointer;
 	typedef const value_type *const_pointer;
-	typedef wrap_iterator<pointer> iterator;
-	typedef wrap_iterator<const_pointer> const_iterator;
+	typedef _normal_iterator<pointer> iterator;
+	typedef _normal_iterator<const_pointer> const_iterator;
 	typedef size_t size_type;
 	typedef ptrdiff_t difference_type;
 
