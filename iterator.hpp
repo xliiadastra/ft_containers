@@ -29,8 +29,8 @@ template <typename T>
 struct iterator_traits<const T*> {
     typedef ptrdiff_t                       difference_type;
     typedef T                               value_type;
-    typedef T*                              pointer;
-    typedef T&                              reference;
+    typedef const T*                        pointer;
+    typedef const T&                        reference;
     typedef std::random_access_iterator_tag iterator_category;
 };
 
@@ -43,6 +43,97 @@ struct iterator {
     typedef _Pointer    pointer;
     typedef _Reference  reference;
 };
+
+template <typename _Iterator>
+class _normal_iterator
+: public iterator<typename iterator_traits<_Iterator>::iterator_category,
+                  typename iterator_traits<_Iterator>::value_type,
+                  typename iterator_traits<_Iterator>::difference_type,
+                  typename iterator_traits<_Iterator>::pointer,
+                  typename iterator_traits<_Iterator>::reference>
+{
+protected:
+    _Iterator _M_current; // Member
+
+public:
+    typedef typename iterator_traits<_Iterator>::differenece_thhype difference_type;
+    typedef typename iterator_traits<_Iterator>::reference          reference;
+    typedef typename iterator_traits<_Iterator>::pointer            pointer;
+
+    _normal_iterator() : _M_current(_Iterator()) {}
+
+    explicit _normal_iterator(const _Iterator& _i) : _M_current(_i) {}
+
+    // Allow iterator to const_iterator conversion
+    template <typename _Iter>
+    inline  _normal_iterator(const _normal_iterator<_Iter>& _i) : _M_current(_i.base()) {}
+
+    // Forward iterator requirments
+    reference   operator*() const { return (*_M_current); }
+
+    pointer     operator->() const { return (_M_current); }
+
+    _normal_iterator&   operator++() { ++_M_current; return (*this); }
+
+    _normal_iterator    operator++(int) { return _normal_iterator(_M_current++); }
+
+    // Bidrectional iterator requirements
+    _normal_iterator&   operator--() { --_M_current; return (*this); }
+
+    _normal_iterator    operator--(int) { return _normal_iterator(_M_current--); }
+
+    // Random access iterator requirments
+    reference   operator[](const difference_type& _n) const { return (_M_current[_n]); }
+
+    _normal_iterator&   operator+=(const difference_type& _n) { _M_current += _n; return (*this); }
+
+    _normal_iterator    operator+(const difference_type& _n) const { return _normal_iterator(_M_current + _n); }
+
+    _normal_iterator&   operator-=(const difference_type& _n) { _M_current -= _n; return (*this); }
+
+    _normal_iterator    operator-(const difference_type& _n) const { return _normal_iterator(_M_current - _n); }
+
+    difference_type     operator-(const _normal_iterator& _i) const { return _M_current - _i.current; }
+
+    const _Iterator&    base() const { return _M_current; }
+};
+
+// Forward iterator requirements
+template <typename _IteratorL, typename _IteratorR>
+inline bool operator==(const _normal_iterator<_IteratorL>& _lhs,
+                       const _normal_iterator<_IteratorR>& _rhs)
+{ return _lhs.base() == _rhs.base(); }
+
+template <typename _IteratorL, typename _IteratorR>
+inline bool operator!=(const _normal_iterator<_IteratorL>& _lhs,
+                       const _normal_iterator<_IteratorR>& _rhs)
+{ return !(_lhs == _rhs); }
+
+// Random access iterator requirements
+template <typename _IteratorL, typename _IteratorR>
+inline bool operator<(const _normal_iterator<_IteratorL>& _lhs,
+                      const _normal_iterator<_IteratorR>& _rhs)
+{ return  _lhs.base() < _rhs.base(); }
+
+template <typename _IteratorL, typename _IteratorR>
+inline bool operator>(const _normal_iterator<_IteratorL>& _lhs,
+                      const _normal_iterator<_IteratorR>& _rhs)
+{ return _rhs < _lhs; }
+
+template <typename _IteratorL, typename _IteratorR>
+inline bool operator<=(const _normal_iterator<_IteratorL>& _lhs,
+                       const _normal_iterator<_IteratorR>& _rhs)
+{ return !(_rhs < _lhs); }
+
+template <typename _IteratorL, typename _IteratorR>
+inline bool operator>=(const _normal_iterator<_IteratorL>& _lhs,
+                       const _normal_iterator<_IteratorR>& _rhs)
+{ return !(_lhs < _rhs); }
+
+template <typename _Iterator>
+inline _normal_iterator<_Iterator>  operator+(typename _normal_iterator<_Iterator>::difference_type _n,
+                                              const _normal_iterator<_Iterator>& _i)
+{ return _normal_iterator<_Iterator>(_i.base() + _n); }
 
 }
 
