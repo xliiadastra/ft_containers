@@ -54,28 +54,28 @@ private:
 	typedef vector<T, Alloc> vector_type;
 
 public:
-	typedef T value_type;
-	typedef value_type &reference;
-	typedef const value_type &const_reference;
-	typedef value_type *pointer;
-	typedef const value_type *const_pointer;
-	typedef _normal_iterator<pointer> iterator;
-	typedef _normal_iterator<const_pointer> const_iterator;
-	typedef size_t size_type;
-	typedef ptrdiff_t difference_type;
+	typedef T 								value_type;
+	typedef value_type&						reference;
+	typedef const value_type&				const_reference;
+	typedef value_type 						*pointer;
+	typedef const value_type 				*const_pointer;
+	typedef _normal_iterator<pointer> 		iterator;
+	typedef _normal_iterator<const_pointer>	const_iterator;
+	typedef size_t 							size_type;
+	typedef ptrdiff_t						difference_type;
 
-	typedef typename _Base::allocator_type allocator_type;
+	typedef typename _Base::allocator_type	allocator_type;
 	allocator_type get_allocator() const { return _Base::get_allocator(); }
 
-	typedef reverse_iterator<const_iterator> const_reverse_iteerator;
-	typedef reverse_iterator<iterator> reverse_iterator;
+	typedef reverse_iterator<const_iterator>	const_reverse_iteerator;
+	typedef reverse_iterator<iterator>			reverse_iterator;
 
 protected:
 	using _Base::allocate;
 	using _Base::deallocate;
-	using _Base::end_of_storage;
-	using _Base::finish;
 	using _Base::start;
+	using _Base::finish;
+	using _Base::end_of_storage;
 
 protected:
 	void _M_insert_aux(iterator __position, const T &__x);
@@ -134,26 +134,44 @@ public:
 	/*
 	 *	Constructor
 	 */
-	explicit vector(const allocator_type& __a = allocator_type()) : _Base(__a) {
-	}
+	explicit vector(const allocator_type& __a = allocator_type()) : _Base(__a) {}
 
 	explicit vector(size_type __n) : _Base(__n, allocator_type()) {
-		finish = uninitialized_fill_n(start, __n, T());
+		finish = std::uninitialized_fill_n(start, __n, T());
 	}
 
 	vector(size_type __n, const T& __value, const allocator_type& __a = allocator_type())
 	: _Base(__n, __a) {
-		finish = uninitaialized_fill_n(start, __n, __value);
+		finish = std::uninitaialized_fill_n(start, __n, __value);
 	}
 
 	vector(const vector& __x) : _Base(__x.size(), __x.get_allocator()) {
-		finish = uninitialized_copy(__x.begin(), __x.end(), start);
+		finish = std::uninitialized_copy(__x.begin(), __x.end(), start);
 	}
 
 	/*
 	 *	Destructor
 	 */
 	~vector() { destroy(start, finish); }
+
+	/*
+	 *	assignment operator
+	 */
+	vector<T, Alloc>&	operator=(const vector<T, Alloc>& _x)
+	{
+		if (&_x != this)
+		{
+			const size_type _xlen = _x.size();
+			if (_xlen > capacity()) {
+				pointer _tmp = _M_allocate_and_copy(_xlen, _x.begin(), _x.end());
+				destroy(start, finish);
+				deallocate(start, end_of_storage, - start);
+				start = _tmp;
+				end_of_storage = start + _xlen;
+			}
+		}
+		}
+	}
 };
 
 } // namespace fd
