@@ -170,7 +170,6 @@ public:
 				end_of_storage = start + _xlen;
 			}
 		}
-		}
 	}
 };
 
